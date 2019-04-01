@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group 'selenium-testng-boilerplate'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext.libraries = [
+        junit:"junit:junit:4.12",
+        testng:"org.testng:testng:6.14.3",
+        selenium:"org.seleniumhq.selenium:selenium-java:3.141.0",
+        assertj: 'org.assertj:assertj-core:3.11.1',
+        apache_commons: 'commons-io:commons-io:2.4'
+]
+
+dependencies {
+    compile libraries.selenium
+    compile libraries.testng
+    compile libraries.apache_commons
+
+    testCompile libraries.junit
+    testCompile libraries.testng
+    testCompile libraries.assertj
+}
+
+test {
+    useTestNG {
+        useDefaultListeners = true
+        reports.html.enabled = false
+        
+        suites 'src/test/resources/testng/testng.xml'
+    }
+
+    testLogging {
+        events "standard_out"
+    }
+
+    systemProperty "selectedBrowser", System.getProperty("browser","chrome")
+    systemProperty "headless", System.getProperty("headless","false")
+    systemProperty "runOnGrid", System.getProperty("runOnGrid","false")
+}
